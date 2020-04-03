@@ -69,6 +69,21 @@ namespace Keepr.Controllers
         return BadRequest(e.Message);
       }
     }
+    [HttpPut("{id}")]
+    [Authorize]
+    public ActionResult<Keep> Edit([FromBody]Keep update, int id)
+    {
+      try
+      {
+        update.Id = id;
+        return _ks.Edit(update, HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+      }
+      catch (Exception e)
+      {
+        return BadRequest(e.Message);
+      }
+    }
+
 
     [HttpDelete("{id}")]
     [Authorize]

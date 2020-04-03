@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using Keepr.Models;
 using Keepr.Repositories;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Keepr.Services
 {
@@ -55,6 +56,24 @@ namespace Keepr.Services
         }
         throw new PermissionException("you do not own that keep");
       }
+    }
+
+    public Keep Edit(Keep update, string userId)
+    {
+      Keep found = _repo.Get(update.Id, false);
+      if (found.UserId == userId)
+      {
+        update.Name = update.Name == null ? found.Name : update.Name;
+        update.Description = update.Description == null ? found.Description : update.Description;
+        update.Img = update.Img == null ? found.Img : update.Img;
+        _repo.Update(update);
+        return update;
+      }
+      if (found.IsPrivate)
+      {
+        throw new ArgumentNullException(nameof(update.Id), $"could Not find post with the id {update.Id}");
+      }
+      throw new PermissionException("you are not the creator of that");
     }
   }
 }
