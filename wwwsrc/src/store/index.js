@@ -17,15 +17,45 @@ let api = Axios.create({
 
 export default new Vuex.Store({
   state: {
-    publicKeeps: []
+    publicKeeps: {}
   },
-  mutations: {},
+  mutations: {
+    setPublicKeeps(state, payload) {
+      let data = {}
+      payload.forEach(each => {
+        data[each.id] = each;
+      });
+      state.publicKeeps = data;
+    },
+    removeKeep(state, id) {
+      Vue.delete(state.publicKeeps, id)
+      state.publicKeeps = state.publicKeeps.filter(k => k.id != id);
+    },
+    editKeep(state, payload) {
+      Vue.set(state.publicKeeps, payload.id, payload)
+    }
+  },
   actions: {
-    setBearer({}, bearer) {
+    setBearer({ }, bearer) {
       api.defaults.headers.authorization = bearer;
     },
     resetBearer() {
       api.defaults.headers.authorization = "";
+    },
+    //#region points
+    async getKeeps({ commit }) {
+      let res = await api.get("keeps")
+      commit("setPublicKeeps", res.data);
+    },
+    async removeKeep({ commit }, id) {
+      await api.delete(`keeps/${id}`)
+      commit("removeKeep", id);
+    },
+    async editKeep({ commit }, data) {
+      let res = await api.put(`keeps/${data.id}`, data);
+      commit("editKeep", res.data)
     }
+
+    //#endregion
   }
 });
