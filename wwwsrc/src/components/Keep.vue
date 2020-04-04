@@ -1,10 +1,15 @@
 <template>
-  <div class="card col-md-2 col-12">
+  <div>
     <img class="card-img-top" :src="data.img" alt />
     <div class="card-body">
       <div v-if="!editing">
         <h4 class="card-title">{{data.name}}</h4>
         <p class="card-text">{{data.description}}</p>
+        <p class="card-text">
+          Views: {{data.views}}
+          keeps: {{data.keeps}}
+          shares: {{data.shares}}
+        </p>
       </div>
       <div v-else>
         <input v-model="edited.name" placeholder="name" />

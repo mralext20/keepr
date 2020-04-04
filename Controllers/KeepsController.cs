@@ -54,6 +54,21 @@ namespace Keepr.Controllers
       }
     }
 
+    [HttpPost("{id}/view")]
+    public ActionResult View(int id)
+    {
+      try
+      {
+        _ks.View(id);
+        return Ok();
+      }
+      catch (Exception e)
+      {
+
+        return BadRequest();
+      }
+    }
+
     [HttpPost]
     [Authorize]
     public ActionResult<Keep> Post([FromBody] Keep newKeep)

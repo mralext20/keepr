@@ -58,6 +58,11 @@ namespace Keepr.Services
       }
     }
 
+    internal void View(int id)
+    {
+      _repo.View(id);
+    }
+
     public Keep Edit(Keep update, string userId)
     {
       Keep found = _repo.Get(update.Id, false);

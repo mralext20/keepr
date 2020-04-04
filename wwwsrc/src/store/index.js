@@ -17,7 +17,8 @@ let api = Axios.create({
 
 export default new Vuex.Store({
   state: {
-    publicKeeps: {}
+    publicKeeps: {},
+    activeKeep: {}
   },
   mutations: {
     setPublicKeeps(state, payload) {
@@ -27,14 +28,26 @@ export default new Vuex.Store({
       });
       state.publicKeeps = data;
     },
+    addPublicKeep(state, payload) {
+      Vue.set(state.publicKeeps, payload.id, payload)
+    },
     removeKeep(state, id) {
       Vue.delete(state.publicKeeps, id)
       state.publicKeeps = state.publicKeeps.filter(k => k.id != id);
     },
     editKeep(state, payload) {
       Vue.set(state.publicKeeps, payload.id, payload)
+    },
+    setActiveKeep(state, payload) {
+      state.activeKeep = payload;
+    },
+    viewBump(state, id) {
+      state.publicKeeps[id].views += 1;
     }
   },
+
+
+
   actions: {
     setBearer({ }, bearer) {
       api.defaults.headers.authorization = bearer;
@@ -54,8 +67,20 @@ export default new Vuex.Store({
     async editKeep({ commit }, data) {
       let res = await api.put(`keeps/${data.id}`, data);
       commit("editKeep", res.data)
+    },
+    async setActiveKeep({ commit, state }, id) {
+      api.post(`keeps/${id}/view`)
+      if (state.publicKeeps[id]) {
+        commit("viewBump", id)
+        commit("setActiveKeep", state.publicKeeps[id])
+        return
+      }
+      let res = await api.get(`keeps/${id}`);
+      commit("setActiveKeep", res.data);
+      if (!res.data.isPrivate) {
+        commit("addPublicKeep", res.data);
+      }
     }
-
     //#endregion
   }
 });

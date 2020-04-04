@@ -59,6 +59,12 @@ namespace Keepr.Repositories
       _db.Execute(sql, update);
     }
 
+    internal void View(int id)
+    {
+      string sql = @"UPDATE keeps SET views = views + 1 WHERE id = @id";
+      _db.Execute(sql, new { id });
+    }
+
 
     //CREATE TABLE keeps (
     //    id int NOT NULL AUTO_INCREMENT,
