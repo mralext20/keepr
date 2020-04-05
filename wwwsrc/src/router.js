@@ -5,6 +5,8 @@ import Home from "./views/Home.vue";
 // @ts-ignore
 import Keep from "./views/Keep.vue"
 // @ts-ignore
+import CreateKeep from "./views/CreateKeep.vue"
+// @ts-ignore
 import Dashboard from "./views/Dashboard.vue";
 import { authGuard } from "@bcwdev/auth0-vue";
 
@@ -21,6 +23,12 @@ export default new Router({
       path: "/dashboard",
       name: "dashboard",
       component: Dashboard,
+      beforeEnter: authGuard
+    },
+    {
+      path: "/create",
+      name: "create",
+      component: CreateKeep,
       beforeEnter: authGuard
     },
     {

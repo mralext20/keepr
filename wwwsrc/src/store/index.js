@@ -80,6 +80,14 @@ export default new Vuex.Store({
       if (!res.data.isPrivate) {
         commit("addPublicKeep", res.data);
       }
+    },
+    async createPoint({ commit }, newKeep) {
+      let res = await api.post("keeps", newKeep)
+
+      if (!res.data.isPrivate) {
+        commit("addPublicKeep", res.data)
+      }
+      commit("addYourKeep", res.data)
     }
     //#endregion
   }
