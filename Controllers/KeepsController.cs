@@ -22,13 +22,31 @@ namespace Keepr.Controllers
     {
       try
       {
-        return Ok(_ks.Get());
+        return Ok(_ks.GetMine(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value));
       }
       catch (Exception e)
       {
         return BadRequest(e.Message);
       };
     }
+    [HttpGet("mine")]
+    [Authorize]
+    public ActionResult<Keep> GetMine()
+    {
+      try
+      {
+
+        string userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        return Ok(_ks.GetMine(userId));
+
+
+      }
+      catch (Exception e)
+      {
+        return BadRequest(e.Message);
+      }
+    }
+
 
     [HttpGet("{id}")]
     public ActionResult<Keep> Get(int id)

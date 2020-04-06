@@ -20,6 +20,7 @@ export default new Vuex.Store({
     publicKeeps: {},
     activeKeep: {},
     yourKeeps: {},
+    yourVaults: {}
 
   },
   mutations: {
@@ -48,6 +49,23 @@ export default new Vuex.Store({
     },
     addYourKeep(state, payload) {
       Vue.set(state.yourKeeps, payload.id, payload)
+    },
+    setYourKeeps(state, payload) {
+      let data = {}
+      payload.forEach(each => {
+        data[each.id] = each
+      });
+      state.yourKeeps = data
+    },
+    addManyPublicKeeps(state, payload) {
+      payload.forEach(each => {
+        Vue.set(state.publicKeeps, each.id, each);
+      });
+    },
+    setYourVaults(state, payload) {
+      payload.forEach(e => {
+        Vue.set(state.yourVaults, e.id, e);
+      })
     }
   },
 
@@ -94,7 +112,21 @@ export default new Vuex.Store({
       }
       commit("addYourKeep", res.data)
       router.push({ name: "keep", params: { id: res.data.id } })
+    },
+    async getYourKeeps({ commit }) {
+      let res = await api.get("keeps/mine")
+      commit("setYourKeeps", res.data);
+      let filtered = res.data.filter(k => !k.isPrivate);
+      commit("addManyPublicKeeps", filtered);
+    },
+    //#endregion
+
+    //#region vaults
+    async getYourVaults({ commit }) {
+      let res = await api.get("vaults");
+      commit("setYourVaults", res.data);
     }
+
     //#endregion
   }
 });

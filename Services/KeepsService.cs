@@ -36,6 +36,11 @@ namespace Keepr.Services
       return found;
     }
 
+    internal IEnumerable<Keep> GetMine(string userId)
+    {
+      return _repo.GetMine(userId);
+    }
+
     public Keep Create(Keep newKeep)
     {
       return _repo.Create(newKeep);

@@ -40,6 +40,12 @@ namespace Keepr.Repositories
       return found;
     }
 
+    internal IEnumerable<Keep> GetMine(object userId)
+    {
+      string sql = @"SELECT * FROM keeps WHERE userId = @userId";
+      return _db.Query<Keep>(sql, new { userId });
+    }
+
     internal bool Delete(int id)
     {
       string sql = @"DELETE FROM keeps WHERE id = @id LIMIT 1;";
