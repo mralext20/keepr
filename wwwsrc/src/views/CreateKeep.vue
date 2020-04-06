@@ -32,7 +32,7 @@ export default {
   },
   methods: {
     submit() {
-      this.$store.dispatch("createPoint", newKeep);
+      this.$store.dispatch("createKeep", this.newKeep);
     }
   }
 };

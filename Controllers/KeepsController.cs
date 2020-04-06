@@ -65,7 +65,7 @@ namespace Keepr.Controllers
       catch (Exception e)
       {
 
-        return BadRequest();
+        return BadRequest(e.Message);
       }
     }
 

@@ -18,7 +18,9 @@ let api = Axios.create({
 export default new Vuex.Store({
   state: {
     publicKeeps: {},
-    activeKeep: {}
+    activeKeep: {},
+    yourKeeps: {},
+
   },
   mutations: {
     setPublicKeeps(state, payload) {
@@ -43,6 +45,9 @@ export default new Vuex.Store({
     },
     viewBump(state, id) {
       state.publicKeeps[id].views += 1;
+    },
+    addYourKeep(state, payload) {
+      Vue.set(state.yourKeeps, payload.id, payload)
     }
   },
 
@@ -81,13 +86,14 @@ export default new Vuex.Store({
         commit("addPublicKeep", res.data);
       }
     },
-    async createPoint({ commit }, newKeep) {
+    async createKeep({ commit }, newKeep) {
       let res = await api.post("keeps", newKeep)
 
       if (!res.data.isPrivate) {
         commit("addPublicKeep", res.data)
       }
       commit("addYourKeep", res.data)
+      router.push({ name: "keep", params: { id: res.data.id } })
     }
     //#endregion
   }
