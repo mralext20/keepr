@@ -8,9 +8,13 @@
         </div>
       </div>
       <div class="row">
-        <div v-for="keep in vault.keeps" :key="keep.vaultKeepId" class="col-md-4 col-12">
-          <keep :data="keep" @remove-from-vault="RemoveFromVault(keep.vaultKeepId)" />
-        </div>
+        <keep
+          :data="keep"
+          v-for="keep in vault.keeps"
+          :key="keep.vaultKeepId"
+          class="col-12 col-md-4"
+          @remove-from-vault="RemoveFromVault(keep.vaultKeepId)"
+        />
       </div>
     </div>
   </div>

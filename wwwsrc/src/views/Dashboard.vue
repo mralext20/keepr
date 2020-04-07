@@ -29,11 +29,7 @@
       </div>
     </div>
     <div class="row" v-else-if="$route.path.endsWith('keeps')">
-      <div v-for="keep in yourKeeps" :key="keep.id" class="col-md-4 col-12">
-       
-          <keep :data="keep" />
-        </router-link>
-      </div>
+      <keep v-for="keep in yourKeeps" :key="keep.id" class="col-md-4 col-12" :data="keep" />
     </div>
   </div>
 </template>

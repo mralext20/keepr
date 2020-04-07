@@ -13,6 +13,7 @@ export default {
   },
   mounted() {
     this.$store.dispatch("setActiveKeep", this.$route.params.id);
+    this.$store.dispatch("getYourVaults");
   },
   computed: {
     keep() {

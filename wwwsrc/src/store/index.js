@@ -37,7 +37,6 @@ export default new Vuex.Store({
     },
     removeKeep(state, id) {
       Vue.delete(state.publicKeeps, id)
-      state.publicKeeps = state.publicKeeps.filter(k => k.id != id);
     },
     editKeep(state, payload) {
       Vue.set(state.publicKeeps, payload.id, payload)
@@ -78,9 +77,9 @@ export default new Vuex.Store({
       state.activeVault = payload;
     },
     deleteVaultKeep(state, { vaultId, vkid, }) {
-      state.yourVaults[vaultId].keeps = state.yourVaults[vaultId].keeps.filter(e => e.vaultKeepId != vkid);
+      Vue.set(state.yourVaults, vaultId, { ...state.yourVaults[vaultId], keeps: [...state.yourVaults[vaultId].keeps.filter(e => e.vaultKeepId != vkid)] });
       if (state.activeVault.id == vaultId) {
-        state.activeVault.keeps = state.yourVaults[vaultId].keeps
+        state.activeVault.keeps = [...state.yourVaults[vaultId].keeps]
       }
     }
   },
