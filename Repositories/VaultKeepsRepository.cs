@@ -34,7 +34,15 @@ namespace Keepr.Repositories
       k.*,
       vk.id as vaultKeepId
       FROM vaultkeeps vk
-      INNER JOIN keeps k ON k.id = vk.keepId 
+      INNER JOIN (
+        
+      SELECT k.*,COUNT(vaultkeeps.id) as keeps FROM keeps k 
+      LEFT JOIN vaultkeeps 
+       ON vaultkeeps.keepId = k.id 
+       AND  k.isPrivate = 0
+       GROUP BY k.id
+
+      ) k ON k.id = vk.keepId 
       WHERE (vaultId = @vaultId AND vk.userId = @userId) ";
       return _db.Query<VaultKeepViewModel>(sql, new { vaultId, userId });
     }
