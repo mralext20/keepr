@@ -20,7 +20,7 @@ namespace Keepr.Repositories
       string sql = @"SELECT k.*,COUNT(vaultkeeps.id) as keeps FROM keeps k 
       LEFT JOIN vaultkeeps 
        ON vaultkeeps.keepId = k.id 
-       AND  k.isPrivate = 0
+       WHERE k.isPrivate = 0
        GROUP BY k.id
        ;";
       return _db.Query<Keep>(sql);
@@ -31,27 +31,23 @@ namespace Keepr.Repositories
       string sql;
       if (FilterPrivate)
       {
-        sql = @"SELECT data.* FROM (
-          SELECT k.*,COUNT(vaultkeeps.id) as keeps 
+        sql = @"SELECT k.*,COUNT(vaultkeeps.id) as keeps 
           FROM keeps k
           LEFT JOIN vaultkeeps
             ON vaultkeeps.keepId = k.id
-            AND  k.isPrivate = 0
+            WHERE k.isPrivate = 0 AND k.id=@id
             GROUP BY k.id
-        ) as data
-        WHERE id = @id
         ;";
       }
       else
       {
-        sql = @"SELECT data.* FROM (
+        sql = @"
           SELECT k.*,COUNT(vaultkeeps.id) as keeps 
           FROM keeps k
           LEFT JOIN vaultkeeps
             ON vaultkeeps.keepId = k.id
+            WHERE k.id = @id
             GROUP BY k.id
-        ) as data
-        WHERE id = @id
         ;";
       }
       Keep found = _db.QueryFirstOrDefault<Keep>(sql, new { id });
