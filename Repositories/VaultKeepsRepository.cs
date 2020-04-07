@@ -51,7 +51,7 @@ namespace Keepr.Repositories
     {
       string sql = @"
       DELETE FROM vaultkeeps WHERE id = @id AND userId = @userId LIMIT 1;";
-      return _db.Execute(sql, new { id, userId }) == 1;
+      return _db.Execute(sql, new { id, userId }) == 1 ? true : throw new Exception("that vault Keep does not exist or you do not own it");
     }
   }
 }
