@@ -1,5 +1,5 @@
 import Vue from "vue";
-import Vuex from "vuex";
+import Vuex, { Store } from "vuex";
 import Axios from "axios";
 import router from "../router";
 
@@ -20,7 +20,8 @@ export default new Vuex.Store({
     publicKeeps: {},
     activeKeep: {},
     yourKeeps: {},
-    yourVaults: {}
+    yourVaults: {},
+    activeVault: {}
 
   },
   mutations: {
@@ -66,6 +67,21 @@ export default new Vuex.Store({
       payload.forEach(e => {
         Vue.set(state.yourVaults, e.id, e);
       })
+    },
+    addAVault(state, payload) {
+      Vue.set(state.yourVaults, payload.id, payload);
+    },
+    setVaultKeeps(state, { vaultId, data }) {
+      state.yourVaults[vaultId].keeps = data
+    },
+    setActiveVault(state, payload) {
+      state.activeVault = payload;
+    },
+    deleteVaultKeep(state, { vaultId, vkid, }) {
+      state.yourVaults[vaultId].keeps = state.yourVaults[vaultId].keeps.filter(e => e.vaultKeepId != vkid);
+      if (state.activeVault.id == vaultId) {
+        state.activeVault.keeps = state.yourVaults[vaultId].keeps
+      }
     }
   },
 
@@ -125,8 +141,37 @@ export default new Vuex.Store({
     async getYourVaults({ commit }) {
       let res = await api.get("vaults");
       commit("setYourVaults", res.data);
-    }
+    },
+    async getVaultKeeps({ commit }, id) {
+      let res = await api.get(`vaults/${id}/keeps`);
+      commit("setVaultKeeps", { vaultId: id, data: res.data })
+    },
+    async getAVault({ commit }, id) {
+      let res = await api.get(`vaults/${id}`);
+      commit("addAVault", res.data);
+    },
+    async setActiveVault({ commit, dispatch, state }, id) {
+      if (state.yourVaults[id]) {
+        if (state.yourVaults[id].keeps) {
 
+          // we already have all the data! dont do any network requests, just set the active vault.
+          commit("setActiveVault", state.yourVaults[id])
+          return;
+        }
+        // we only need to get the keeps
+        await dispatch("getVaultKeeps", id)
+        commit("setActiveVault", state.yourVaults[id])
+      }
+      // we need to get the vault too
+      await dispatch("getAVault", id);
+      await dispatch("getVaultKeeps", id);
+      commit("setActiveVault", state.yourVaults[id]);
+    },
+
+    async deleteVaultKeep({ commit }, { vaultId, vkid }) {
+      await api.delete(`vaultkeeps/${vkid}`)
+      commit("deleteVaultKeep", { vaultId, vkid });
+    }
     //#endregion
   }
 });

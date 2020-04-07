@@ -18,17 +18,19 @@
     </ul>
     <div class="row" v-if="$route.path.endsWith('vaults')">
       <div v-for="vault in yourVaults" :key="vault.id" class="col-md-4 col-12">
-        <div class="card">
-          <div class="card-body">
-            <h4 class="card-title">{{vault.name}}</h4>
-            <p class="card-text">{{vault.description}}</p>
+        <router-link class="card" :to="{name:'vault', params:{id:vault.id}}">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">{{vault.name}}</h4>
+              <p class="card-text">{{vault.description}}</p>
+            </div>
           </div>
-        </div>
+        </router-link>
       </div>
     </div>
     <div class="row" v-else-if="$route.path.endsWith('keeps')">
       <div v-for="keep in yourKeeps" :key="keep.id" class="col-md-4 col-12">
-        <router-link class="card" :to="{name:'keep', params:{id:keep.id}}">
+       
           <keep :data="keep" />
         </router-link>
       </div>
