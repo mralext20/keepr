@@ -17,7 +17,12 @@ namespace Keepr.Repositories
 
     internal IEnumerable<Keep> Get()
     {
-      string sql = "SELECT * FROM Keeps WHERE isPrivate = 0;";
+      string sql = @"SELECT k.*,COUNT(vaultkeeps.id) as keeps FROM keeps k 
+      LEFT JOIN vaultkeeps 
+       ON vaultkeeps.keepId = k.id 
+       AND  k.isPrivate = 0
+       GROUP BY k.id
+       ;";
       return _db.Query<Keep>(sql);
     }
 
@@ -26,11 +31,28 @@ namespace Keepr.Repositories
       string sql;
       if (FilterPrivate)
       {
-        sql = "SELECT * FROM Keeps WHERE isPrivate = 0 AND id=@id";
+        sql = @"SELECT data.* FROM (
+          SELECT k.*,COUNT(vaultkeeps.id) as keeps 
+          FROM keeps k
+          LEFT JOIN vaultkeeps
+            ON vaultkeeps.keepId = k.id
+            AND  k.isPrivate = 0
+            GROUP BY k.id
+        ) as data
+        WHERE id = @id
+        ;";
       }
       else
       {
-        sql = "SELECT * FROM Keeps WHERE id=@id";
+        sql = @"SELECT data.* FROM (
+          SELECT k.*,COUNT(vaultkeeps.id) as keeps 
+          FROM keeps k
+          LEFT JOIN vaultkeeps
+            ON vaultkeeps.keepId = k.id
+            GROUP BY k.id
+        ) as data
+        WHERE id = @id
+        ;";
       }
       Keep found = _db.QueryFirstOrDefault<Keep>(sql, new { id });
       if (found is null)
@@ -42,7 +64,15 @@ namespace Keepr.Repositories
 
     internal IEnumerable<Keep> GetMine(object userId)
     {
-      string sql = @"SELECT * FROM keeps WHERE userId = @userId";
+      string sql = @"SELECT data.* FROM (
+          SELECT k.*,COUNT(vaultkeeps.id) as keeps 
+          FROM keeps k
+          LEFT JOIN vaultkeeps
+            ON vaultkeeps.keepId = k.id
+            GROUP BY k.id
+        ) as data
+        WHERE userId = @userId
+        ;";
       return _db.Query<Keep>(sql, new { userId });
     }
 

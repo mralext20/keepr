@@ -22,7 +22,7 @@ namespace Keepr.Controllers
     {
       try
       {
-        return Ok(_ks.GetMine(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value));
+        return Ok(_ks.Get());
       }
       catch (Exception e)
       {
