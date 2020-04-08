@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <keep :data="keep" :vaults="vaults" />
+    <keep :data="keep" :vaults="vaults" @RemoveKeep="$router.push({name:'home'})" />
   </div>
 </template>
 

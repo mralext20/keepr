@@ -76,6 +76,7 @@ export default {
   methods: {
     remove() {
       this.$store.dispatch("removeKeep", this.data.id);
+      this.$emit("RemoveKeep");
     },
     submitEdit() {
       this.$store.dispatch("editKeep", this.edited);
