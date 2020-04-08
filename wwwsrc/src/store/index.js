@@ -180,6 +180,7 @@ export default new Vuex.Store({
       await api.post("vaultkeeps", { vaultId, keepId: keep.id });
       // we MUST have the vault if we have the ID already.
       commit("addKeepToVault", { vaultId, keep })
+      router.push({ name: "vault", params: { id: vaultId } })
     }
     //#endregion
   }
