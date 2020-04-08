@@ -39,7 +39,6 @@ namespace Keepr.Repositories
       SELECT k.*,COUNT(vaultkeeps.id) as keeps FROM keeps k 
       LEFT JOIN vaultkeeps 
        ON vaultkeeps.keepId = k.id 
-       AND  k.isPrivate = 0
        GROUP BY k.id
 
       ) k ON k.id = vk.keepId 

@@ -81,6 +81,10 @@ export default new Vuex.Store({
       if (state.activeVault.id == vaultId) {
         state.activeVault.keeps = [...state.yourVaults[vaultId].keeps]
       }
+    },
+    addKeepToVault(state, { vaultId, keep }) {
+      keep.keeps += 1;
+      state.yourVaults[vaultId].keeps.push(keep);
     }
   },
 
@@ -170,6 +174,12 @@ export default new Vuex.Store({
     async deleteVaultKeep({ commit }, { vaultId, vkid }) {
       await api.delete(`vaultkeeps/${vkid}`)
       commit("deleteVaultKeep", { vaultId, vkid });
+    },
+
+    async addToVault({ commit }, { vaultId, keep }) {
+      await api.post("vaultkeeps", { vaultId, keepId: keep.id });
+      // we MUST have the vault if we have the ID already.
+      commit("addKeepToVault", { vaultId, keep })
     }
     //#endregion
   }
