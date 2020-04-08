@@ -5,6 +5,7 @@
         <div class="card-body">
           <h4 class="card-title">{{vault.name}}</h4>
           <p class="card-text">{{vault.description}}</p>
+          <button class="btn btn-danger" @click="deleteVault">Delete Vault</button>
         </div>
       </div>
       <div class="row">
@@ -44,6 +45,9 @@ export default {
         vaultId: this.$route.params.id,
         vkid
       });
+    },
+    deleteVault() {
+      this.$store.dispatch("deleteVault", this.vault.id);
     }
   }
 };
