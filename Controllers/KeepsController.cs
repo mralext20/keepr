@@ -84,6 +84,21 @@ namespace Keepr.Controllers
       }
     }
 
+    [HttpPost("{id}/share")]
+    public ActionResult Share(int id)
+    {
+      try
+      {
+        _ks.Share(id);
+        return Ok();
+      }
+      catch (Exception e)
+      {
+        return BadRequest(e.Message);
+      }
+    }
+
+
     [HttpPost]
     [Authorize]
     public ActionResult<Keep> Post([FromBody] Keep newKeep)

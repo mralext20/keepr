@@ -98,6 +98,13 @@ namespace Keepr.Repositories
     }
 
 
+    internal void Share(int id)
+    {
+      string sql = @"UPDATE keeps SET shares = shares + 1 WHERE id = @id";
+      _db.Execute(sql, new { id });
+    }
+
+
     //CREATE TABLE keeps (
     //    id int NOT NULL AUTO_INCREMENT,
     //    name VARCHAR(255) NOT NULL,

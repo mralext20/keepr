@@ -67,6 +67,10 @@ namespace Keepr.Services
     {
       _repo.View(id);
     }
+    internal void Share(int id)
+    {
+      _repo.Share(id);
+    }
 
     public Keep Edit(Keep update, string userId)
     {
