@@ -25,15 +25,16 @@
             <button class="btn btn-success" @click="submitEdit">Send</button>
           </div>
         </router-link>
-        <div v-if="sub == data.userId">
-          <button class="btn btn-danger" @click="remove">Delete</button>
-          <button class="btn btn-warning" @click="editing = !editing">edit</button>
-        </div>
-        <div v-if="data.vaultKeepId">
-          <button class="btn btn-danger" @click="$emit('remove-from-vault')">Remove from Vault</button>
-        </div>
-        <div v-if="vaults && Object.keys(vaults).length > 0" class="dropdown">
+        <div class="dropdown">
+          <button v-if="sub == data.userId" class="btn btn-danger" @click="remove">Delete</button>
+          <button v-if="sub == data.userId" class="btn btn-warning" @click="editing = !editing">edit</button>
           <button
+            v-if="data.vaultKeepId"
+            class="btn btn-danger"
+            @click="$emit('remove-from-vault')"
+          >Remove from Vault</button>
+          <button
+            v-if="vaults && Object.keys(vaults).length > 0"
             class="btn btn-secondary dropdown-toggle"
             type="button"
             data-toggle="dropdown"
