@@ -1,5 +1,32 @@
 <template>
   <div>
+    <div
+      class="modal fade"
+      id="shareModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Copy link to share</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Click the button bellow to cop the link to this keep.</p>
+            <p class="text-success">{{shareMessage}}</p>
+          </div>
+          <div class="modal-footer">
+            <input ref="input" :value="href" readonly />
+            <button type="button" @click="copyLinkToClipboard" class="btn btn-primary">Copy Link</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="card">
       <div class="embed-responsive embed-responsive-16by9">
         <a v-if="onSingleKeep" :href="data.img">
@@ -26,6 +53,12 @@
           </div>
         </router-link>
         <div class="dropdown">
+          <button
+            class="btn btn-success"
+            data-toggle="modal"
+            data-target="#shareModal"
+            v-if="$route.name == 'keep'"
+          >share</button>
           <button v-if="sub == data.userId" class="btn btn-danger" @click="remove">Delete</button>
           <button v-if="sub == data.userId" class="btn btn-warning" @click="editing = !editing">edit</button>
           <button
@@ -58,6 +91,8 @@ import "bootstrap";
 export default {
   data() {
     return {
+      sharing: false,
+      shareMessage: "",
       editing: false,
       edited: {}
     };
@@ -72,6 +107,9 @@ export default {
     },
     onSingleKeep() {
       return this.$route.name == "keep";
+    },
+    href() {
+      return self.location.href;
     }
   },
   methods: {
@@ -85,6 +123,15 @@ export default {
     },
     addToVault(vaultId) {
       this.$store.dispatch("addToVault", { vaultId, keep: this.data });
+    },
+    copyLinkToClipboard() {
+      this.$refs.input.select();
+      self.document.execCommand("copy");
+      this.shareMessage = "Copied to ClipBoard";
+      setTimeout(() => {
+        this.shareMessage = "";
+      }, 2000);
+      this.$store.dispatch("shareBump", this.data.id);
     }
   }
 };

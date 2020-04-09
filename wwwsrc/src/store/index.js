@@ -11,7 +11,7 @@ let baseUrl = location.host.includes("localhost")
 
 let api = Axios.create({
   baseURL: baseUrl + "api/",
-  timeout: 3000,
+  timeout: 5000,
   withCredentials: true
 });
 
@@ -90,8 +90,13 @@ export default new Vuex.Store({
       Vue.delete(state.yourVaults, vaultId)
       if (state.activeVault.id == vaultId) {
         state.activeVault = {};
+      }
+    },
+    bumpShares(state, keepId) {
+      if (state.activeKeep.id == keepId) {
+        state.activeKeep.share++;
+      }
     }
-  },
   },
 
 
@@ -143,6 +148,11 @@ export default new Vuex.Store({
       commit("setYourKeeps", res.data);
       let filtered = res.data.filter(k => !k.isPrivate);
       commit("addManyPublicKeeps", filtered);
+    },
+
+    async shareBump({ commit }, keepId) {
+      await api.post(`keeps/${keepId}/share`);
+      commit("bumpShares", keepId);
     },
     //#endregion
 
