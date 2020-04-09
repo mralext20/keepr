@@ -77,13 +77,14 @@ export default new Vuex.Store({
       state.activeVault = payload;
     },
     deleteVaultKeep(state, { vaultId, vkid, }) {
-      Vue.set(state.yourVaults, vaultId, { ...state.yourVaults[vaultId], keeps: [...state.yourVaults[vaultId].keeps.filter(e => e.vaultKeepId != vkid)] });
-      if (state.activeVault.id == vaultId) {
-        state.activeVault.keeps = [...state.yourVaults[vaultId].keeps]
-      }
+      state.activeVault.keeps = state.activeVault.keeps.filter(keep => keep.vaultKeepId != vkid);
+      state.yourVaults[vaultId].keeps = state.yourVaults[vaultId].keeps.filter(keep => keep.vaultKeepId != vkid)
     },
     addKeepToVault(state, { vaultId, keep }) {
       keep.keeps += 1;
+      if (state.yourVaults[vaultId].keeps == undefined) {
+        state.yourVaults[vaultId].keeps = []
+      }
       state.yourVaults[vaultId].keeps.push(keep);
     },
     deleteVault(state, vaultId) {
@@ -157,6 +158,11 @@ export default new Vuex.Store({
     //#endregion
 
     //#region vaults
+    async createVault({ commit }, newVault) {
+      let res = await api.post("vaults", newVault)
+      commit("addAVault", res.data)
+      router.push({ name: "vault", params: { id: res.data.id } })
+    },
     async getYourVaults({ commit }) {
       let res = await api.get("vaults");
       commit("setYourVaults", res.data);

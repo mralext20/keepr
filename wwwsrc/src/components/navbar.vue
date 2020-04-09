@@ -20,7 +20,7 @@
         <li
           class="nav-item"
           v-if="$auth.isAuthenticated"
-          :class="{ active: $route.name.startsWith('dashboard') }"
+          :class="{ active: $route.name != undefined && $route.name.startsWith('dashboard') }"
         >
           <router-link class="nav-link" :to="{ name: 'dashboard vaults' }">My-Dashboard</router-link>
         </li>
@@ -30,6 +30,13 @@
           :class="{ active: $route.name == 'create' }"
         >
           <router-link class="nav-link" :to="{ name: 'create' }">create Keep</router-link>
+        </li>
+        <li
+          class="nav-item"
+          v-if="$auth.isAuthenticated"
+          :class="{ active: $route.name == 'createVault' }"
+        >
+          <router-link class="nav-link" :to="{ name: 'createVault' }">create Vault</router-link>
         </li>
       </ul>
       <span class="navbar-text">

@@ -9,6 +9,8 @@ import CreateKeep from "./views/CreateKeep.vue";
 // @ts-ignore
 import Vault from "./views/Vault.vue";
 // @ts-ignore
+import CreateVault from "./views/CreateVault.vue";
+// @ts-ignore
 import Dashboard from "./views/Dashboard.vue";
 import { authGuard } from "@bcwdev/auth0-vue";
 
@@ -43,6 +45,12 @@ export default new Router({
       path: "/create",
       name: "create",
       component: CreateKeep,
+      beforeEnter: authGuard
+    },
+    {
+      path: "/create-vault",
+      name: "createVault",
+      component: CreateVault,
       beforeEnter: authGuard
     },
     {

@@ -16,7 +16,7 @@
             </label>
           </div>
 
-          <button class="btn btn-primary" type="submit">Create Point</button>
+          <button class="btn btn-primary" type="submit">Create Keep</button>
         </form>
       </div>
     </div>
@@ -25,6 +25,7 @@
 
 <script>
 export default {
+  name: "create-keep",
   data() {
     return {
       newKeep: {}
